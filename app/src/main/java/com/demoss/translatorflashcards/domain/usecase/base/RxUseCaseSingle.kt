@@ -1,5 +1,6 @@
 package com.demoss.translatorflashcards.domain.usecase.base
 
+import com.demoss.translatorflashcards.util.setDefaultSchedulers
 import io.reactivex.Single
 import io.reactivex.observers.DisposableSingleObserver
 
