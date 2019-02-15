@@ -1,4 +1,4 @@
-package com.demoss.newsline
+package com.demoss.newsline.application
 
 import com.demoss.newsline.data.dataModules
 import com.demoss.newsline.domain.domainModules

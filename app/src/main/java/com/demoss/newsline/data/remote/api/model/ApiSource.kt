@@ -10,4 +10,4 @@ data class ApiSource(
     @SerializedName("name")
     @Expose
     val name: String?
-) {}
+)

@@ -2,9 +2,7 @@ package com.demoss.newsline.presentation.fragments
 
 import androidx.lifecycle.MutableLiveData
 import com.demoss.newsline.base.mvvm.BaseViewModel
-import com.demoss.newsline.domain.model.Translation
 import com.demoss.newsline.util.pagination.*
-import io.reactivex.Observable
 
 class WordsListViewModel : BaseViewModel<WordsListCommand, WordsListState>() {
 

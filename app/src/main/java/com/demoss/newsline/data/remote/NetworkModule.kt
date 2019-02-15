@@ -1,6 +1,9 @@
 package com.demoss.newsline.data.remote
 
-import com.demoss.newsline.Constants
+import com.demoss.newsline.application.Constants
+import com.demoss.newsline.application.Constants.CONNECTION_TIMEOUT
+import com.demoss.newsline.application.Constants.READ_TIMEOUT
+import com.demoss.newsline.application.Constants.WRITE_TIMEOUT
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import okhttp3.OkHttpClient
 import org.koin.dsl.module.module
@@ -22,9 +25,9 @@ val networkModule = module {
         // OkHttp
         OkHttpClient.Builder().apply {
             retryOnConnectionFailure(true)
-            connectTimeout(60, TimeUnit.SECONDS)
-            readTimeout(60, TimeUnit.SECONDS)
-            writeTimeout(60, TimeUnit.SECONDS)
+            connectTimeout(CONNECTION_TIMEOUT, TimeUnit.SECONDS)
+            readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
+            writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
         }.build()
     }
 }
