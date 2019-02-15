@@ -14,7 +14,7 @@ class NewsApiTopNewsRequestBuilder {
     fun build(): Map<String, String?> = getBaseRequest() + mapOf<String, String?>(
         NewsApiConstants.PAGE to page.toString(),
         NewsApiConstants.QUERY to query,
-        NewsApiConstants.SOURCES to sources.takeIf { country == null },
+        NewsApiConstants.SOURCES to sources, // source preferred
         NewsApiConstants.CATEGORY to category,
         NewsApiConstants.COUNTRY to country.takeIf { sources == null }
     )
