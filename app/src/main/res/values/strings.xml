@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">TranslatorFlashcards</string>
+
+    <string name="text_sample">Hello world! WwWwWwWwWwWwWwW</string>
+    <string name="released">RELEASED</string>
+    <string name="refresh">REFRESH</string>
+    <string name="page_progress">PAGE_PROGRESS</string>
+    <string name="last_page">LAST_PAGE</string>
+    <string name="empty_state">EMPTY_STATE</string>
+    <string name="empty_progress">EMPTY_PROGRESS</string>
+    <string name="empty_error">EMPTY_ERROR</string>
+    <string name="empty_data">EMPTY_DATA</string>
+    <string name="data">DATA</string>
 </resources>
