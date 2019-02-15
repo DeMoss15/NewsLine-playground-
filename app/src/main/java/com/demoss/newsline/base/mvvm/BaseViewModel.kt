@@ -15,7 +15,10 @@ abstract class BaseViewModel<UserCommand, State> : ViewModel() {
     val states: LiveData<State> get() = _states
 
     open fun subscribeToUserCommands(commands: Observable<UserCommand>) {
-        compositeDisposable.add(commands.subscribe { dispatchUserCommand(it) })
+        compositeDisposable.add(commands.subscribe(
+            { dispatchUserCommand(it) },
+            { it.printStackTrace() }
+        ))
     }
 
     protected abstract fun dispatchUserCommand(command: UserCommand)

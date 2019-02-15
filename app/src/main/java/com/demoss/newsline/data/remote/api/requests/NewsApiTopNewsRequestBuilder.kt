@@ -5,17 +5,16 @@ import com.demoss.newsline.data.remote.api.getBaseRequest
 
 class NewsApiTopNewsRequestBuilder {
 
-    var page: Int? = null
+    var page: Int = 0
     var query: String? = null
     var sources: String? = null
     var category: String? = null
     var country: String? = null
 
-    fun build(): Map<String, String?> = getBaseRequest() + mapOf<String, String?>(
-        NewsApiConstants.PAGE to page.toString(),
-        NewsApiConstants.QUERY to query,
-        NewsApiConstants.SOURCES to sources, // source preferred
-        NewsApiConstants.CATEGORY to category,
-        NewsApiConstants.COUNTRY to country.takeIf { sources == null }
-    )
+    fun build(): Map<String, String?> = getBaseRequest() + mapOf(NewsApiConstants.PAGE to page.toString()).apply {
+        query?.let { this[NewsApiConstants.QUERY] to query }
+        query?.let { this[NewsApiConstants.SOURCES] to sources }// source preferred
+        query?.let { this[NewsApiConstants.CATEGORY] to category }
+        query?.let { if (sources == null )this[NewsApiConstants.COUNTRY] to country }
+    }
 }

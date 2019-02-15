@@ -13,10 +13,10 @@ class GetTopHeadlinesUseCase(private val topHeadlinesRepository: TopHeadlinesRep
     }
 
     class Params(
-        val page: Int,
-        val query: String,
-        val sources: String,
-        val category: String,
-        val country: String
+        var page: Int,
+        var query: String? = null,
+        var sources: String? = null,
+        var category: String? = null,
+        var country: String? = null
     )
 }

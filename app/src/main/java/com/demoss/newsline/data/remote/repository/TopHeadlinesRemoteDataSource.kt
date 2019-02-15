@@ -4,10 +4,11 @@ import com.demoss.newsline.data.remote.RemoteDomainMapper
 import com.demoss.newsline.data.remote.api.NewsApi
 import com.demoss.newsline.data.remote.api.requests.NewsApiTopNewsRequestBuilder
 import com.demoss.newsline.domain.model.Article
+import com.demoss.newsline.util.setDefaultSchedulers
 import io.reactivex.Observable
 import java.lang.RuntimeException
 
-class TopHeadlinesRemoteDataSource(val newsApi: NewsApi) : TopHeadlinesRemoteRepository {
+class TopHeadlinesRemoteDataSource(private val newsApi: NewsApi) : TopHeadlinesRemoteRepository {
 
     override fun getTopHeadlines(
         page: Int,
@@ -23,6 +24,6 @@ class TopHeadlinesRemoteDataSource(val newsApi: NewsApi) : TopHeadlinesRemoteRep
         this.country = country
     }.build()).map {
         if (it.code() != 200 || it.body()?.articles == null) throw RuntimeException(it.message())
-        it.body()?.articles?.let { articles -> RemoteDomainMapper.toDomain(articles) }
-    }
+        it.body()?.articles?.let { articles -> RemoteDomainMapper.toDomain(articles) } ?: listOf()
+    }.setDefaultSchedulers()
 }

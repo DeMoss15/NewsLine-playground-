@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ConstraintLayoutStates xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <State
+        android:id="@+id/empty_progress"
+        app:constraints="@layout/fragment_news_empty_progress" />
+
+    <State
+        android:id="@+id/message"
+        app:constraints="@layout/fragment_news_message" />
+
+    <State
+        android:id="@+id/data_progress"
+        app:constraints="@layout/fragment_news_data_progress" />
+
+    <State
+        android:id="@+id/data"
+        app:constraints="@layout/fragment_news_data" />
+
+</ConstraintLayoutStates>

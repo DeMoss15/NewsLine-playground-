@@ -11,7 +11,7 @@ class ReactivePaginator<T>(
 ) {
 
     companion object {
-        const val FIRST_PAGE = 0
+        const val FIRST_PAGE = 1
     }
 
     private val disposable: CompositeDisposable = CompositeDisposable()
@@ -38,8 +38,13 @@ class ReactivePaginator<T>(
 
     init {
         disposable.add(requestFabric(pageSubject).subscribe(
-                { currentState.newData(it) },
-                { currentState.fail(it) }
+                {
+                    currentState.newData(it)
+                },
+                {
+                    it.printStackTrace()
+                    currentState.fail(it)
+                }
         ))
         dispatchState(viewStateSubject)
     }

@@ -1,4 +1,4 @@
-package com.demoss.newsline.application
+package com.demoss.newsline
 
 object Constants {
     // Network
@@ -8,5 +8,5 @@ object Constants {
     // API
     const val BASE_URL: String = "https://newsapi.org"
     const val API_KEY: String = "3b199916184a4ef29471a98ef08e8e16"
-    const val PAGE_SIZE: Int = 25
+    const val PAGE_SIZE: Int = 5
 }

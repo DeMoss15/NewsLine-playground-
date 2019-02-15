@@ -11,4 +11,5 @@
     <string name="empty_error">EMPTY_ERROR</string>
     <string name="empty_data">EMPTY_DATA</string>
     <string name="data">DATA</string>
+    <string name="article_preview">article preview</string>
 </resources>

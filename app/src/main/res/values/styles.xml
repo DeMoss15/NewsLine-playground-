@@ -7,17 +7,17 @@
         <item name="android:windowBackground">@color/colorWindowBackground</item>
     </style>
 
-    <style name="WordAppearance" parent="TextAppearance.AppCompat">
+    <style name="Title" parent="TextAppearance.AppCompat">
         <item name="android:textAlignment">textStart</item>
-        <item name="android:textSize">@dimen/medium_text</item>
+        <item name="android:textSize">@dimen/big_text</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="TranslationAppearance" parent="TextAppearance.AppCompat.Medium">
+    <style name="CommonText" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textAlignment">textEnd</item>
         <item name="android:textSize">@dimen/medium_text</item>
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
 </resources>

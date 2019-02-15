@@ -5,7 +5,7 @@ import android.view.WindowManager
 import androidx.lifecycle.ViewModelProviders
 import com.demoss.newsline.R
 import com.demoss.newsline.base.BaseActivity
-import com.demoss.newsline.presentation.fragments.WordsListFragment
+import com.demoss.newsline.presentation.fragments.NewsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity<MainCommand, MainState, MainViewModel>() {
@@ -18,7 +18,7 @@ class MainActivity : BaseActivity<MainCommand, MainState, MainViewModel>() {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         supportFragmentManager.beginTransaction()
-            .add(container.id, WordsListFragment())
+            .add(container.id, NewsFragment())
             .commit()
     }
 

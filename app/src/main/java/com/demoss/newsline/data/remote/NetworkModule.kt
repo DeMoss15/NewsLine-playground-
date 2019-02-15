@@ -1,9 +1,9 @@
 package com.demoss.newsline.data.remote
 
-import com.demoss.newsline.application.Constants
-import com.demoss.newsline.application.Constants.CONNECTION_TIMEOUT
-import com.demoss.newsline.application.Constants.READ_TIMEOUT
-import com.demoss.newsline.application.Constants.WRITE_TIMEOUT
+import com.demoss.newsline.Constants
+import com.demoss.newsline.Constants.CONNECTION_TIMEOUT
+import com.demoss.newsline.Constants.READ_TIMEOUT
+import com.demoss.newsline.Constants.WRITE_TIMEOUT
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import okhttp3.OkHttpClient
 import org.koin.dsl.module.module

@@ -1,6 +1,6 @@
 package com.demoss.newsline.data.remote.api
 
-import com.demoss.newsline.application.Constants
+import com.demoss.newsline.Constants
 import com.demoss.newsline.data.remote.api.model.ResponseObject
 import io.reactivex.Observable
 import retrofit2.Response
@@ -14,6 +14,7 @@ interface NewsApi {
 }
 
 fun getBaseRequest(): Map<String, String> = mapOf(
+    "language" to "en",
     NewsApiConstants.API_KEY to Constants.API_KEY,
     NewsApiConstants.PAGE_SIZE to Constants.PAGE_SIZE.toString()
 )
