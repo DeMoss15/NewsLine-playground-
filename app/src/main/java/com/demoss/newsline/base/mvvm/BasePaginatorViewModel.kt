@@ -9,7 +9,10 @@ abstract class BasePaginatorViewModel<ItemType> : BaseViewModel<BasePaginatorUse
     abstract val requestFabric: (Observable<Int>) -> Observable<List<ItemType>>
 
     protected val stateDispatcher: (Observable<ReactivePaginatorViewState>) -> Unit = {
-        compositeDisposable.add(it.subscribe { nextState -> _states.value = nextState })
+        compositeDisposable.add(it.subscribe(
+            { nextState -> _states.value = nextState },
+            { throwable -> throwable.printStackTrace() }
+        ))
     }
     protected lateinit var paginator: ReactivePaginator<ItemType>
 

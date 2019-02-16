@@ -6,14 +6,14 @@ import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.demoss.newsline.R
 import com.demoss.newsline.base.BaseFragment
 import com.demoss.newsline.base.mvvm.BasePaginatorUserCommand
 import com.demoss.newsline.base.mvvm.PAGINATOR_LOAD_NEXT_PAGE
-import com.demoss.newsline.base.mvvm.PAGINATOR_REFRESH
 import com.demoss.newsline.domain.model.Article
 import com.demoss.newsline.util.pagination.*
+import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_news_data.*
 import org.koin.android.ext.android.inject
 
@@ -25,6 +25,7 @@ class NewsFragment : BaseFragment<BasePaginatorUserCommand, ReactivePaginatorVie
     override lateinit var viewModel: NewsViewModel
 
     private val rvAdapter: ArticlesRecyclerViewAdapter = ArticlesRecyclerViewAdapter()
+    private val compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         viewModel = ViewModelProviders.of(this, vmFactory).get(NewsViewModel::class.java)
@@ -37,10 +38,21 @@ class NewsFragment : BaseFragment<BasePaginatorUserCommand, ReactivePaginatorVie
         rvArticles.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = rvAdapter
-            setOnNextPageListener(RecyclerView.FOCUS_DOWN) {
-                userCommands.onNext(PAGINATOR_LOAD_NEXT_PAGE)
-            }
+            compositeDisposable.add(scrollStateChanges().subscribe {
+                if (!canScrollVertically(View.FOCUS_DOWN) && it == 0)
+                    userCommands.onNext(PAGINATOR_LOAD_NEXT_PAGE)
+            })
         }
+    }
+
+    override fun onDestroyView() {
+        compositeDisposable.clear()
+        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        compositeDisposable.dispose()
+        super.onDestroy()
     }
 
     override fun dispatchState(newStatus: ReactivePaginatorViewState) {
@@ -57,15 +69,9 @@ class NewsFragment : BaseFragment<BasePaginatorUserCommand, ReactivePaginatorVie
         })
     }
 
-    private fun showDataState(data: List<Article>): Int {
-        rvAdapter.dispatchData(data)
-        return R.id.data
-    }
+    private fun showDataState(data: List<Article>): Int = R.id.data.also { rvAdapter.dispatchData(data) }
 
-    private fun setMessageState(@StringRes message: Int): Int {
-        tvMessage.text = getString(message)
-        return R.id.message
-    }
+    private fun setMessageState(@StringRes message: Int): Int = R.id.message.also { tvMessage.text = getString(message) }
 
     private fun setConstraintState(@IdRes id: Int) {
         fragment_news_constraint.setState(id, 0, 0)
