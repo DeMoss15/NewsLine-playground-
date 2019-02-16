@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.demoss.newsline.R
 import com.demoss.newsline.base.BaseFragment
@@ -15,22 +14,15 @@ import com.demoss.newsline.util.pagination.*
 import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_news_data.*
-import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class NewsFragment : BaseFragment<BasePaginatorUserCommand, ReactivePaginatorViewState, NewsViewModel>() {
 
     override val layoutResourceId: Int = R.layout.fragment_news_empty_progress
-
-    private val vmFactory: NewsModelFactory by inject()
-    override lateinit var viewModel: NewsViewModel
+    override val viewModel by viewModel<NewsViewModel>()
 
     private val rvAdapter: ArticlesRecyclerViewAdapter = ArticlesRecyclerViewAdapter()
     private val compositeDisposable = CompositeDisposable()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProviders.of(this, vmFactory).get(NewsViewModel::class.java)
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

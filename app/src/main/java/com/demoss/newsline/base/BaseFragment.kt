@@ -15,8 +15,8 @@ import io.reactivex.subjects.PublishSubject
 abstract class BaseFragment<UserCommand, State, VM : BaseViewModel<UserCommand, State>>
     : Fragment(), BaseView<UserCommand, State, VM> {
 
-    override val userCommands: PublishSubject<UserCommand> = PublishSubject.create()
     abstract val layoutResourceId: Int
+    override val userCommands: PublishSubject<UserCommand> = PublishSubject.create()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

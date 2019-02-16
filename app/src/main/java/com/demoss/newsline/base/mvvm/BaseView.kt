@@ -8,7 +8,7 @@ interface BaseView<UserCommand, State, VM : BaseViewModel<UserCommand, State>> {
 
     // for sending commands to view model
     val userCommands: PublishSubject<UserCommand>
-    var viewModel: VM
+    val viewModel: VM
 
     fun dispatchState(newStatus: State)
     fun subscribeToViewModel(lifecycleOwner: LifecycleOwner) {
