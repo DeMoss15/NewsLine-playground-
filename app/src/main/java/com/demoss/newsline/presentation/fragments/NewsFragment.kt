@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.demoss.newsline.R
 import com.demoss.newsline.base.BaseFragment
 import com.demoss.newsline.base.mvvm.PAGINATOR_LOAD_NEXT_PAGE
-import com.demoss.newsline.base.mvvm.PAGINATOR_REFRESH
 import com.demoss.newsline.base.mvvm.PaginatorAction
 import com.demoss.newsline.domain.model.Article
 import com.demoss.newsline.util.pagination.*
@@ -18,6 +17,10 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 class NewsFragment : BaseFragment<PaginatorAction, PaginatorViewState<Article>, NewsViewModel>() {
 
+    companion object {
+        const val TAG = "com.demoss.newsline.presentation.fragments.NewsFragment"
+    }
+
     override val layoutResourceId: Int = R.layout.fragment_news_empty_progress
     override val viewModel by viewModel<NewsViewModel>()
 
@@ -25,7 +28,6 @@ class NewsFragment : BaseFragment<PaginatorAction, PaginatorViewState<Article>, 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.executeAction(PAGINATOR_REFRESH)
         fragment_news_constraint.loadLayoutDescription(R.xml.fragment_news)
 
         rvArticles.apply {

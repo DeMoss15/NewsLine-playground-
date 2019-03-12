@@ -9,7 +9,8 @@ abstract class BasePaginatorViewModel<ItemType> : BaseViewModel<PaginatorAction,
 
     protected abstract val requestFabric: suspend (Int) -> List<ItemType>
 
-    protected val paginator: Paginator<ItemType> by lazy { Paginator(viewModelScope, requestFabric) }
+    protected val paginator: Paginator<ItemType> by lazy { Paginator(viewModelScope, requestFabric).apply { refresh() } }
+
 
     override val states: LiveData<PaginatorViewState<ItemType>>
         get() = paginator.viewStatesLiveData

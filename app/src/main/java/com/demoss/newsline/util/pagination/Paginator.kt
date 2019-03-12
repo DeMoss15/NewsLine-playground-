@@ -2,9 +2,7 @@ package com.demoss.newsline.util.pagination
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class Paginator<T>(
     private val scope: CoroutineScope,
@@ -242,5 +240,9 @@ class Paginator<T>(
         }
     }
 
-    private inner class LOADER_RELEASED : LoaderState<T>
+    private inner class LOADER_RELEASED : LoaderState<T> {
+        init {
+            if (scope.isActive) scope.cancel()
+        }
+    }
 }

@@ -2,6 +2,8 @@ package com.demoss.newsline.presentation.root
 
 import android.os.Bundle
 import android.view.WindowManager
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProviders
 import com.demoss.newsline.R
 import com.demoss.newsline.base.BaseActivity
@@ -17,18 +19,22 @@ class MainActivity : BaseActivity<MainAction, MainState, MainViewModel>() {
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        supportFragmentManager.beginTransaction()
-            .add(container.id, NewsFragment())
-            .commit()
     }
 
     override fun dispatchState(newStatus: MainState) {
         when (newStatus) {
-            is InitialState -> dispatchInitialState()
+            is InitialState -> showFragment(NewsFragment.TAG) { NewsFragment() }
         }
     }
 
-    private fun dispatchInitialState() {
+    private fun showFragment(tag: String, fabric: () -> Fragment) {
+        with(supportFragmentManager.findFragmentByTag(tag)) {
+            if (this != null) executeTransaction { attach(this@with) }
+            else executeTransaction { add(container.id, fabric(), tag) }
+        }
+    }
 
+    private fun executeTransaction(transaction: FragmentTransaction.() -> FragmentTransaction) {
+        supportFragmentManager.beginTransaction().transaction().commit()
     }
 }
