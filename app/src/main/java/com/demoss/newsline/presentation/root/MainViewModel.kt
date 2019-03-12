@@ -1,16 +1,14 @@
 package com.demoss.newsline.presentation.root
 
 import com.demoss.newsline.base.mvvm.BaseViewModel
-import io.reactivex.Observable
 
-class MainViewModel: BaseViewModel<MainCommand, MainState>() {
+class MainViewModel: BaseViewModel<MainAction, MainState>() {
 
-    override fun subscribeToUserCommands(commands: Observable<MainCommand>) {
-        super.subscribeToUserCommands(commands)
+    override fun onFirstViewAttach() {
         _states.value = InitialState
     }
 
-    override fun dispatchUserCommand(command: MainCommand) {
-        // TODO: Dispatch command
+    override fun executeAction(action: MainAction) {
+        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

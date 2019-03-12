@@ -5,59 +5,49 @@ import android.view.View
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.demoss.newsline.R
 import com.demoss.newsline.base.BaseFragment
-import com.demoss.newsline.base.mvvm.BasePaginatorUserCommand
 import com.demoss.newsline.base.mvvm.PAGINATOR_LOAD_NEXT_PAGE
+import com.demoss.newsline.base.mvvm.PAGINATOR_REFRESH
+import com.demoss.newsline.base.mvvm.PaginatorAction
 import com.demoss.newsline.domain.model.Article
 import com.demoss.newsline.util.pagination.*
-import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_news_data.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class NewsFragment : BaseFragment<BasePaginatorUserCommand, ReactivePaginatorViewState, NewsViewModel>() {
+class NewsFragment : BaseFragment<PaginatorAction, PaginatorViewState<Article>, NewsViewModel>() {
 
     override val layoutResourceId: Int = R.layout.fragment_news_empty_progress
     override val viewModel by viewModel<NewsViewModel>()
 
     private val rvAdapter: ArticlesRecyclerViewAdapter = ArticlesRecyclerViewAdapter()
-    private val compositeDisposable = CompositeDisposable()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.executeAction(PAGINATOR_REFRESH)
         fragment_news_constraint.loadLayoutDescription(R.xml.fragment_news)
+
         rvArticles.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = rvAdapter
-            compositeDisposable.add(scrollStateChanges().subscribe {
-                if (!canScrollVertically(View.FOCUS_DOWN) && it == 0)
-                    userCommands.onNext(PAGINATOR_LOAD_NEXT_PAGE)
-            })
+            setOnNextPageListener(RecyclerView.FOCUS_DOWN) {
+                viewModel.executeAction(PAGINATOR_LOAD_NEXT_PAGE)
+            }
         }
     }
 
-    override fun onDestroyView() {
-        compositeDisposable.clear()
-        super.onDestroyView()
-    }
-
-    override fun onDestroy() {
-        compositeDisposable.dispose()
-        super.onDestroy()
-    }
-
-    override fun dispatchState(newStatus: ReactivePaginatorViewState) {
+    override fun dispatchState(newStatus: PaginatorViewState<Article>) {
         setConstraintState(when (newStatus) {
-            EMPTY -> setMessageState(R.string.empty_state)
-            EMPTY_PROGRESS -> R.id.empty_progress
-            EMPTY_ERROR -> setMessageState(R.string.empty_error)
-            EMPTY_DATA -> setMessageState(R.string.empty_data)
-            PAGE_PROGRESS -> R.id.data_progress
-            REFRESH -> R.id.data_progress
-            RELEASED -> setMessageState(R.string.released)
-            is DATA<*> -> showDataState(newStatus.data as List<Article>)
-            is LAST_PAGE<*> -> showDataState(newStatus.data as List<Article>)
+            is EMPTY -> setMessageState(R.string.empty_state)
+            is EMPTY_PROGRESS -> R.id.empty_progress
+            is EMPTY_ERROR -> setMessageState(R.string.empty_error)
+            is EMPTY_DATA -> setMessageState(R.string.empty_data)
+            is PAGE_PROGRESS -> R.id.data_progress
+            is REFRESH -> R.id.data_progress
+            is RELEASED -> setMessageState(R.string.released)
+            is DATA -> showDataState(newStatus.data)
+            is LAST_PAGE -> showDataState(newStatus.data)
         })
     }
 

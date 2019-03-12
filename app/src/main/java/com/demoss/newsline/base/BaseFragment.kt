@@ -10,13 +10,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.demoss.newsline.base.mvvm.BaseView
 import com.demoss.newsline.base.mvvm.BaseViewModel
-import io.reactivex.subjects.PublishSubject
 
 abstract class BaseFragment<UserCommand, State, VM : BaseViewModel<UserCommand, State>>
     : Fragment(), BaseView<UserCommand, State, VM> {
 
     abstract val layoutResourceId: Int
-    override val userCommands: PublishSubject<UserCommand> = PublishSubject.create()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

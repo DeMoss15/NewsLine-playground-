@@ -1,18 +1,16 @@
 package com.demoss.newsline.base
 
 import android.os.Bundle
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.demoss.newsline.base.mvvm.BaseView
 import com.demoss.newsline.base.mvvm.BaseViewModel
-import io.reactivex.subjects.PublishSubject
 
 abstract class BaseActivity<UserCommand, State, VM : BaseViewModel<UserCommand, State>>
     : AppCompatActivity(), BaseView<UserCommand, State, VM> {
 
-    override val userCommands: PublishSubject<UserCommand> = PublishSubject.create()
     abstract val layoutResourceId: Int
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,53 +1,43 @@
 package com.demoss.newsline.util.pagination
 
-import io.reactivex.Observable
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.subjects.PublishSubject
-import java.lang.RuntimeException
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
-class ReactivePaginator<T>(
-        requestFabric: (Observable<Int>) -> Observable<List<T>>,
-        dispatchState: (Observable<ReactivePaginatorViewState>) -> Unit
+class Paginator<T>(
+    private val scope: CoroutineScope,
+    private val requestFabric: suspend (Int) -> List<T>
 ) {
 
     companion object {
-        const val FIRST_PAGE = 1
+        const val FIRST_PAGE = 0
     }
 
-    private val disposable: CompositeDisposable = CompositeDisposable()
-    private val pageSubject: PublishSubject<Int> = PublishSubject.create()
-    private val viewStateSubject: PublishSubject<ReactivePaginatorViewState> = PublishSubject.create()
+    val viewStatesLiveData: LiveData<PaginatorViewState<T>>
+        get() = _viewStateLiveData
+    private val _viewStateLiveData: MutableLiveData<PaginatorViewState<T>> = MutableLiveData()
     private val currentData: MutableList<T> = mutableListOf()
     private var currentState: LoaderState<T> = LOADER_EMPTY()
         set(value) {
-            when (value) {
-                is LOADER_EMPTY -> viewStateSubject.onNext(EMPTY)
-                is LOADER_EMPTY_DATA -> viewStateSubject.onNext(EMPTY_DATA)
-                is LOADER_EMPTY_ERROR -> viewStateSubject.onNext(EMPTY_ERROR)
-                is LOADER_EMPTY_PROGRESS -> viewStateSubject.onNext(EMPTY_PROGRESS)
-                is LOADER_DATA -> viewStateSubject.onNext(DATA(currentData))
-                is LOADER_ALL_DATA -> viewStateSubject.onNext(LAST_PAGE(currentData))
-                is LOADER_PAGE_PROGRESS -> viewStateSubject.onNext(PAGE_PROGRESS)
-                is LOADER_REFRESH -> viewStateSubject.onNext(REFRESH)
-                is LOADER_RELEASED -> viewStateSubject.onNext(RELEASED)
-                else -> throw RuntimeException("undefined loader class")
-            }
+            _viewStateLiveData.postValue(
+                when (value) {
+                    is LOADER_EMPTY -> EMPTY()
+                    is LOADER_EMPTY_DATA -> EMPTY_DATA()
+                    is LOADER_EMPTY_ERROR -> EMPTY_ERROR()
+                    is LOADER_EMPTY_PROGRESS -> EMPTY_PROGRESS()
+                    is LOADER_DATA -> DATA(currentData.toMutableList())
+                    is LOADER_ALL_DATA -> LAST_PAGE(currentData)
+                    is LOADER_PAGE_PROGRESS -> PAGE_PROGRESS()
+                    is LOADER_REFRESH -> REFRESH()
+                    is LOADER_RELEASED -> RELEASED()
+                    else -> throw RuntimeException("undefined loader class")
+                }
+            )
             field = value
         }
     private var currentPage: Int = 0
-
-    init {
-        disposable.add(requestFabric(pageSubject).subscribe(
-                {
-                    currentState.newData(it)
-                },
-                {
-                    it.printStackTrace()
-                    currentState.fail(it)
-                }
-        ))
-        dispatchState(viewStateSubject)
-    }
 
     fun restart() {
         currentState.restart()
@@ -65,6 +55,16 @@ class ReactivePaginator<T>(
         currentState.release()
     }
 
+    // For usage in LoaderStates
+    private fun loadPageNumber(pageNumber: Int) {
+        scope.launch(CoroutineExceptionHandler { _, exception ->
+            exception.printStackTrace()
+            currentState.fail(exception)
+        }) {
+            currentState.newData(requestFabric(pageNumber))
+        }
+    }
+
     private interface LoaderState<T> {
         fun restart() {}
         fun refresh() {}
@@ -78,7 +78,7 @@ class ReactivePaginator<T>(
 
         override fun refresh() {
             currentState = LOADER_EMPTY_PROGRESS()
-            pageSubject.onNext(FIRST_PAGE)
+            loadPageNumber(FIRST_PAGE)
         }
 
         override fun release() {
@@ -89,7 +89,7 @@ class ReactivePaginator<T>(
     private inner class LOADER_EMPTY_PROGRESS : LoaderState<T> {
 
         override fun restart() {
-            pageSubject.onNext(FIRST_PAGE)
+            loadPageNumber(FIRST_PAGE)
         }
 
         override fun newData(data: List<T>) {
@@ -116,12 +116,12 @@ class ReactivePaginator<T>(
 
         override fun restart() {
             currentState = LOADER_EMPTY_PROGRESS()
-            pageSubject.onNext(FIRST_PAGE)
+            loadPageNumber(FIRST_PAGE)
         }
 
         override fun refresh() {
             currentState = LOADER_EMPTY_PROGRESS()
-            pageSubject.onNext(FIRST_PAGE)
+            loadPageNumber(FIRST_PAGE)
         }
 
         override fun release() {
@@ -133,12 +133,12 @@ class ReactivePaginator<T>(
 
         override fun restart() {
             currentState = LOADER_EMPTY_PROGRESS()
-            pageSubject.onNext(FIRST_PAGE)
+            loadPageNumber(FIRST_PAGE)
         }
 
         override fun refresh() {
             currentState = LOADER_EMPTY_PROGRESS()
-            pageSubject.onNext(FIRST_PAGE)
+            loadPageNumber(FIRST_PAGE)
         }
 
         override fun release() {
@@ -150,17 +150,17 @@ class ReactivePaginator<T>(
 
         override fun restart() {
             currentState = LOADER_EMPTY_PROGRESS()
-            pageSubject.onNext(FIRST_PAGE)
+            loadPageNumber(FIRST_PAGE)
         }
 
         override fun refresh() {
             currentState = LOADER_REFRESH()
-            pageSubject.onNext(FIRST_PAGE)
+            loadPageNumber(FIRST_PAGE)
         }
 
         override fun loadNewPage() {
             currentState = LOADER_PAGE_PROGRESS()
-            pageSubject.onNext(++currentPage)
+            loadPageNumber(++currentPage)
         }
 
         override fun release() {
@@ -172,7 +172,7 @@ class ReactivePaginator<T>(
 
         override fun restart() {
             currentState = LOADER_EMPTY_PROGRESS()
-            pageSubject.onNext(FIRST_PAGE)
+            loadPageNumber(FIRST_PAGE)
         }
 
         override fun newData(data: List<T>) {
@@ -202,7 +202,7 @@ class ReactivePaginator<T>(
 
         override fun restart() {
             currentState = LOADER_EMPTY_PROGRESS()
-            pageSubject.onNext(FIRST_PAGE)
+            loadPageNumber(FIRST_PAGE)
         }
 
         override fun newData(data: List<T>) {
@@ -213,7 +213,7 @@ class ReactivePaginator<T>(
 
         override fun refresh() {
             currentState = LOADER_REFRESH()
-            pageSubject.onNext(FIRST_PAGE)
+            loadPageNumber(FIRST_PAGE)
         }
 
         override fun fail(error: Throwable) {
@@ -229,12 +229,12 @@ class ReactivePaginator<T>(
 
         override fun restart() {
             currentState = LOADER_EMPTY_PROGRESS()
-            pageSubject.onNext(FIRST_PAGE)
+            loadPageNumber(FIRST_PAGE)
         }
 
         override fun refresh() {
             currentState = LOADER_REFRESH()
-            pageSubject.onNext(FIRST_PAGE)
+            loadPageNumber(FIRST_PAGE)
         }
 
         override fun release() {
@@ -242,9 +242,5 @@ class ReactivePaginator<T>(
         }
     }
 
-    private inner class LOADER_RELEASED : LoaderState<T> {
-        init {
-            disposable.dispose()
-        }
-    }
+    private inner class LOADER_RELEASED : LoaderState<T>
 }

@@ -1,29 +1,20 @@
 package com.demoss.newsline.base.mvvm
 
-import com.demoss.newsline.util.pagination.ReactivePaginator
-import com.demoss.newsline.util.pagination.ReactivePaginatorViewState
-import io.reactivex.Observable
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
+import com.demoss.newsline.util.pagination.Paginator
+import com.demoss.newsline.util.pagination.PaginatorViewState
 
-abstract class BasePaginatorViewModel<ItemType> : BaseViewModel<BasePaginatorUserCommand, ReactivePaginatorViewState>() {
+abstract class BasePaginatorViewModel<ItemType> : BaseViewModel<PaginatorAction, PaginatorViewState<ItemType>>() {
 
-    abstract val requestFabric: (Observable<Int>) -> Observable<List<ItemType>>
+    protected abstract val requestFabric: suspend (Int) -> List<ItemType>
 
-    protected val stateDispatcher: (Observable<ReactivePaginatorViewState>) -> Unit = {
-        compositeDisposable.add(it.subscribe(
-            { nextState -> _states.value = nextState },
-            { throwable -> throwable.printStackTrace() }
-        ))
-    }
-    protected lateinit var paginator: ReactivePaginator<ItemType>
+    protected val paginator: Paginator<ItemType> by lazy { Paginator(viewModelScope, requestFabric) }
 
-    override fun subscribeToUserCommands(commands: Observable<BasePaginatorUserCommand>) {
-        super.subscribeToUserCommands(commands)
-        paginator = ReactivePaginator(requestFabric, stateDispatcher)
-        commands.doOnDispose { compositeDisposable.clear() }.subscribe()
-        paginator.refresh()
-    }
+    override val states: LiveData<PaginatorViewState<ItemType>>
+        get() = paginator.viewStatesLiveData
 
-    override fun dispatchUserCommand(command: BasePaginatorUserCommand): Unit = when (command) {
+    override fun executeAction(action: PaginatorAction): Unit = when (action) {
         PAGINATOR_RESTART -> paginator.restart()
         PAGINATOR_REFRESH -> paginator.refresh()
         PAGINATOR_LOAD_NEXT_PAGE -> paginator.loadNewPage()

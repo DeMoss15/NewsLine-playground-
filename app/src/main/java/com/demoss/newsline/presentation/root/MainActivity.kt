@@ -8,7 +8,7 @@ import com.demoss.newsline.base.BaseActivity
 import com.demoss.newsline.presentation.fragments.NewsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : BaseActivity<MainCommand, MainState, MainViewModel>() {
+class MainActivity : BaseActivity<MainAction, MainState, MainViewModel>() {
 
     override lateinit var viewModel: MainViewModel
     override val layoutResourceId: Int = R.layout.activity_main
