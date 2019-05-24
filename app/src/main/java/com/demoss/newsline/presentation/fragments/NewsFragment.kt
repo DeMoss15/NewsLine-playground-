@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.demoss.newsline.R
 import com.demoss.newsline.base.BaseFragment
@@ -20,7 +21,7 @@ class NewsFragment : BaseFragment<NewsAction, NewsState, NewsViewModel>() {
     override val layoutResourceId: Int = R.layout.fragment_news_empty_progress
     override val viewModel by viewModel<NewsViewModel>()
 
-    private val rvAdapter: ArticlesRecyclerViewAdapter = ArticlesRecyclerViewAdapter()
+    private val rvAdapter: ArticlesRecyclerViewAdapter by lazy { ArticlesRecyclerViewAdapter(viewModel.viewModelScope) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

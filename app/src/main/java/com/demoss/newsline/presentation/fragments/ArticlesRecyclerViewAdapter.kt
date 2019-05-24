@@ -7,10 +7,10 @@ import com.demoss.newsline.base.BaseRecyclerViewAdapter
 import com.demoss.newsline.domain.model.Article
 import com.demoss.newsline.util.showImage
 import kotlinx.android.synthetic.main.item_article.view.*
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-class ArticlesRecyclerViewAdapter : BaseRecyclerViewAdapter<Article, ArticlesRecyclerViewAdapter.VH>() {
+class ArticlesRecyclerViewAdapter(val scope: CoroutineScope) : BaseRecyclerViewAdapter<Article, ArticlesRecyclerViewAdapter.VH>() {
 
     var onItemClick: ((Article) -> Unit)? = null
 
@@ -24,7 +24,7 @@ class ArticlesRecyclerViewAdapter : BaseRecyclerViewAdapter<Article, ArticlesRec
                 setOnClickListener {
                     onItemClick?.invoke(item)
                 }
-                GlobalScope.launch {
+                scope.launch {
                     for (i in item.channelProgress) view.pb.progress = i
                 }
                 pb.progress = 0
@@ -40,6 +40,6 @@ class ArticlesRecyclerViewAdapter : BaseRecyclerViewAdapter<Article, ArticlesRec
 
     inner class DiffUtilItemCallback() : BaseDiffUtilItemCallback<Article>() {
         override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean =
-                oldItem == newItem
+            oldItem == newItem
     }
 }
