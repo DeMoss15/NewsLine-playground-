@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.widget.FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   android:layout_width="match_parent"
-                                                   android:layout_height="match_parent">
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
 
     <com.demoss.newsline.presentation.spizheno.PaginalRenderView
             android:id="@+id/paginalView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"/>
 
-    </com.demoss.newsline.presentation.spizheno.PaginalRenderView>
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
 </android.widget.FrameLayout>

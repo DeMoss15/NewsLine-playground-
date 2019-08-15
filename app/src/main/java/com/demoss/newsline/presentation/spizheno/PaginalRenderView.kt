@@ -25,7 +25,6 @@ class PaginalRenderView @JvmOverloads constructor(
     private var itemDiff: ((old: Any, new: Any) -> Boolean)? = null
 
     private var adapter: PaginalAdapter? = null
-    private val resourceManager = ResourceManager(context)
 
     init {
         inflate(R.layout.view_paginal_render, true)

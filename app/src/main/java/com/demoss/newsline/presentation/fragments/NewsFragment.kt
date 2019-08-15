@@ -11,7 +11,6 @@ import com.demoss.newsline.base.mvvm.PAGINATOR_LOAD_NEXT_PAGE
 import com.demoss.newsline.base.mvvm.PAGINATOR_REFRESH
 import com.demoss.newsline.base.mvvm.PaginatorAction
 import com.demoss.newsline.domain.model.Article
-import com.demoss.newsline.presentation.spizheno.ProgressItem
 import com.demoss.newsline.presentation.spizheno.inflate
 import com.demoss.newsline.util.pagination.PaginatorViewState
 import com.demoss.newsline.util.showImage
@@ -29,6 +28,14 @@ class NewsFragment : BaseFragment<PaginatorAction, PaginatorViewState<Article>, 
     override val layoutResourceId: Int = R.layout.fragment_news_data
     override val viewModel by viewModel<NewsViewModel>()
 
+    /*override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        rv.apply {
+            layoutManager = LinearLayoutManager(context)
+        }
+    }*/
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -37,13 +44,9 @@ class NewsFragment : BaseFragment<PaginatorAction, PaginatorViewState<Article>, 
             { viewModel.executeAction(PAGINATOR_LOAD_NEXT_PAGE) },
             { old, new -> old == new},
             object: AdapterDelegate<MutableList<Any>>() {
-                override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-                    return VH(parent.inflate(R.layout.item_article))
-                }
+                override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder = VH(parent.inflate(R.layout.item_article))
 
-                override fun isForViewType(items: MutableList<Any>, position: Int): Boolean {
-                    return items[position] is ProgressItem
-                }
+                override fun isForViewType(items: MutableList<Any>, position: Int): Boolean = items[position] is Article
 
                 override fun onBindViewHolder(
                     items: MutableList<Any>,
@@ -51,9 +54,8 @@ class NewsFragment : BaseFragment<PaginatorAction, PaginatorViewState<Article>, 
                     holder: RecyclerView.ViewHolder,
                     payloads: MutableList<Any>
                 ) {
-                    if (holder is VH) {
+                    if (holder is VH && items[position] is Article)
                         holder.bindData(items[position] as Article)
-                    }
                 }
             }
         )
@@ -72,6 +74,7 @@ class NewsFragment : BaseFragment<PaginatorAction, PaginatorViewState<Article>, 
     }
 
     override fun dispatchState(newStatus: PaginatorViewState<Article>) {
+//        if (newStatus is DATA) rv.adapter = ArticlesRecyclerViewAdapter(newStatus.data.toMutableList())
         paginalView.render(newStatus)
     }
 }
