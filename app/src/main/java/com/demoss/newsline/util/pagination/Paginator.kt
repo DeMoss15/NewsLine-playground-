@@ -27,9 +27,9 @@ class Paginator<T>(
                     is LOADER_EMPTY_PROGRESS -> EMPTY_PROGRESS()
                     is LOADER_DATA -> DATA(currentData.toMutableList())
                     is LOADER_ALL_DATA -> LAST_PAGE(currentData)
-                    is LOADER_PAGE_PROGRESS -> PAGE_PROGRESS()
-                    is LOADER_REFRESH -> REFRESH()
-                    is LOADER_RELEASED -> RELEASED()
+                    is LOADER_PAGE_PROGRESS -> PAGE_PROGRESS(currentData)
+                    is LOADER_REFRESH -> REFRESH(currentData)
+                    is LOADER_RELEASED -> RELEASED(currentData)
                     else -> throw RuntimeException("undefined loader class")
                 }
             )

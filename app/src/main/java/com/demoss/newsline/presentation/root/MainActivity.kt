@@ -4,19 +4,18 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.ViewModelProviders
 import com.demoss.newsline.R
 import com.demoss.newsline.base.BaseActivity
 import com.demoss.newsline.presentation.fragments.NewsFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity<MainAction, MainState, MainViewModel>() {
 
-    override lateinit var viewModel: MainViewModel
+    override val viewModel: MainViewModel by viewModel<MainViewModel>()
     override val layoutResourceId: Int = R.layout.activity_main
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
     }
