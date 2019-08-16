@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.demoss.newsline.R
 import com.demoss.newsline.base.BaseRecyclerViewAdapter
 import com.demoss.newsline.domain.model.Article
-import com.demoss.newsline.presentation.spizheno.inflate
+import com.demoss.newsline.presentation.spizjeno.inflate
 import com.demoss.newsline.util.showImage
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegatesManager

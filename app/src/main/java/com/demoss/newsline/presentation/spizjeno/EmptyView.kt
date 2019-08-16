@@ -1,4 +1,4 @@
-package com.demoss.newsline.presentation.spizheno
+package com.demoss.newsline.presentation.spizjeno
 
 import android.content.Context
 import android.util.AttributeSet

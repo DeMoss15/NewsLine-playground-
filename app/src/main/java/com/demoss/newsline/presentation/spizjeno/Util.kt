@@ -1,4 +1,4 @@
-package com.demoss.newsline.presentation.spizheno
+package com.demoss.newsline.presentation.spizjeno
 
 import android.view.LayoutInflater
 import android.view.View

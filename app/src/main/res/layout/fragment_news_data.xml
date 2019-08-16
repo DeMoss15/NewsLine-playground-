@@ -3,7 +3,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
 
-    <com.demoss.newsline.presentation.spizheno.PaginalRenderView
+    <com.demoss.newsline.presentation.spizjeno.PaginalRenderView
             android:id="@+id/paginalView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
